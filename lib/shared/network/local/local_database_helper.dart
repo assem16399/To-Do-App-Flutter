@@ -21,5 +21,20 @@ abstract class LocalDBHelper {
     return sqlDatabase;
   }
 
-  static void insertInDatabase() {}
+  static Future<void> insertInDatabase({
+    required String taskTitle,
+    required String taskTime,
+    required String taskDate,
+  }) async {
+    final database = await createDatabase();
+    try {
+      await database.transaction((txn) async {
+        final value = await txn.rawInsert('INSERT INTO user_tasks(title,date,time,status) '
+            'VALUES("$taskTitle","$taskDate","$taskTime","new")');
+        print('$value Inserted Successfully ');
+      });
+    } catch (error) {
+      print('Error In Inserting New Record $error');
+    }
+  }
 }
