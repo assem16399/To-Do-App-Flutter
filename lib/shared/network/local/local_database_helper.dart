@@ -4,19 +4,15 @@ import 'package:path/path.dart' as path_constructor;
 abstract class LocalDBHelper {
   static Future<sql.Database> createDatabase() async {
     final dbPath = await sql.getDatabasesPath();
-
+    // sql.deleteDatabase(path_constructor.join(dbPath, 'todo.db'));
     final sqlDatabase = await sql.openDatabase(path_constructor.join(dbPath, 'todo.db'), version: 1,
         onCreate: (database, currentVersion) async {
-      print('Database is Created');
       try {
         await database.execute('CREATE TABLE user_tasks'
             '(id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT)');
-        print('Table is Created');
       } catch (error) {
-        print(error.toString());
+        rethrow;
       }
-    }, onOpen: (database) {
-      print('Database is opened');
     });
     return sqlDatabase;
   }
@@ -29,12 +25,20 @@ abstract class LocalDBHelper {
     final database = await createDatabase();
     try {
       await database.transaction((txn) async {
-        final value = await txn.rawInsert('INSERT INTO user_tasks(title,date,time,status) '
+        await txn.rawInsert('INSERT INTO user_tasks(title,date,time,status) '
             'VALUES("$taskTitle","$taskDate","$taskTime","new")');
-        print('$value Inserted Successfully ');
       });
     } catch (error) {
-      print('Error In Inserting New Record $error');
+      rethrow;
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> fetchDataFromDatabase() async {
+    try {
+      final database = await createDatabase();
+      return await database.rawQuery('SELECT * FROM user_tasks');
+    } catch (error) {
+      rethrow;
     }
   }
 }
