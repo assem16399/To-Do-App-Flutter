@@ -2,19 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/models/task/cubit/task_cubit.dart';
+import 'package:todo_app/models/task/cubit/task_states.dart';
 import 'package:todo_app/shared/components/widgets/default_text_field.dart';
 import 'package:todo_app/shared/cubit/app_cubit.dart';
 import 'package:todo_app/shared/cubit/app_states.dart';
 
-class HomeLayout extends StatelessWidget {
+class HomeLayout extends StatefulWidget {
+  HomeLayout({Key? key}) : super(key: key);
+
+  @override
+  State<HomeLayout> createState() => _HomeLayoutState();
+}
+
+class _HomeLayoutState extends State<HomeLayout> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   final formKey = GlobalKey<FormState>();
 
   final titleController = TextEditingController();
-  final timeController = TextEditingController();
-  final dateController = TextEditingController();
 
-  HomeLayout({Key? key}) : super(key: key);
+  final timeController = TextEditingController();
+
+  final dateController = TextEditingController();
 
   Future<TimeOfDay?> displayTimePicker(BuildContext context) async {
     return await showTimePicker(context: context, initialTime: TimeOfDay.now());
@@ -87,6 +96,7 @@ class HomeLayout extends StatelessWidget {
         )
         .closed
         .then((_) {
+      print('closedd');
       clearControllers();
       appData.toggleBottomSheet();
     });
@@ -94,9 +104,10 @@ class HomeLayout extends StatelessWidget {
 
   void submitData(BuildContext context, AppCubit appData) async {
     if (formKey.currentState!.validate()) {
+      BlocProvider.of<TasksCubit>(context, listen: false).addNewTask(
+          title: titleController.text, time: timeController.text, date: dateController.text);
       Navigator.of(context).pop();
       clearControllers();
-      appData.toggleBottomSheet();
     }
   }
 
@@ -107,8 +118,15 @@ class HomeLayout extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    BlocProvider.of<TasksCubit>(context).fetchAndSetTasks();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final tasksData = BlocProvider.of<TasksCubit>(context, listen: false);
+    final tasksData = BlocProvider.of<TasksCubit>(context);
     final appData = BlocProvider.of<AppCubit>(context);
 
     return BlocConsumer<AppCubit, AppStates>(
@@ -118,15 +136,21 @@ class HomeLayout extends StatelessWidget {
         appBar: AppBar(
           title: Text(appData.appBarTitles[appData.currentPageIndex]),
         ),
-        body: tasksData.tasks.isEmpty
-            ? const Center(
-                child: Text(
-                  'Start Adding Some Tasks Now...',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-              )
-            : appData.tabs[appData.currentPageIndex],
+        body: BlocConsumer<TasksCubit, TasksStates>(
+            listener: (context, tasksState) {},
+            builder: (context, tasksState) {
+              //tasksData.fetchAndSetTasks();
+              if (tasksState is TasksInitialState) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return tasksData.tasks.isEmpty
+                  ? const Center(
+                      child: Text('Add Some Tasks'),
+                    )
+                  : appData.tabs[appData.currentPageIndex];
+            }),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: appData.currentPageIndex,
           onTap: (index) {

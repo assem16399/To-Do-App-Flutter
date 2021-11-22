@@ -1,5 +1,7 @@
-abstract class TaskStates {}
+abstract class TasksStates {}
 
-class TaskInitialState extends TaskStates {}
+class TasksInitialState extends TasksStates {}
 
-class TaskChangeState extends TaskStates {}
+class TasksAddNewTaskState extends TasksStates {}
+
+class TasksFetchState extends TasksStates {}

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/models/task/cubit/task_cubit.dart';
+import 'package:todo_app/models/task/cubit/task_states.dart';
 
 class TasksTab extends StatelessWidget {
   const TasksTab({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    final tasksData = BlocProvider.of<TasksCubit>(context);
+    final tasksData = BlocProvider.of<TasksCubit>(context, listen: false);
     return ListView.builder(
       itemCount: tasksData.tasks.length,
       itemBuilder: (context, index) => Card(

@@ -4,12 +4,12 @@ import 'package:path/path.dart' as path_constructor;
 abstract class LocalDBHelper {
   static Future<sql.Database> createDatabase() async {
     final dbPath = await sql.getDatabasesPath();
-    //sql.deleteDatabase(path_constructor.join(dbPath, 'todo.db'));
+    sql.deleteDatabase(path_constructor.join(dbPath, 'todo.db'));
     final sqlDatabase = await sql.openDatabase(path_constructor.join(dbPath, 'todo.db'), version: 1,
         onCreate: (database, currentVersion) async {
       try {
         await database.execute('CREATE TABLE user_tasks'
-            '(id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT)');
+            '(id TEXT PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT)');
       } catch (error) {
         rethrow;
       }
@@ -18,6 +18,7 @@ abstract class LocalDBHelper {
   }
 
   static Future<void> insertInDatabase({
+    required String taskId,
     required String taskTitle,
     required String taskTime,
     required String taskDate,
@@ -25,8 +26,8 @@ abstract class LocalDBHelper {
     final database = await createDatabase();
     try {
       await database.transaction((txn) async {
-        await txn.rawInsert('INSERT INTO user_tasks(title,date,time,status) '
-            'VALUES("$taskTitle","$taskDate","$taskTime","new")');
+        await txn.rawInsert('INSERT INTO user_tasks(id,title,date,time,status) '
+            'VALUES("$taskId","$taskTitle","$taskDate","$taskTime","new")');
       });
     } catch (error) {
       rethrow;

@@ -1,9 +1,9 @@
 class Task {
-  final int? id;
+  final String? id;
   final String? title;
   final String? time;
   final String? date;
-  final String? type;
+  final String? status;
 
-  Task({this.id, this.title, this.time, this.date, this.type});
+  Task({this.id, this.title, this.time, this.date, this.status});
 }

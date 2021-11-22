@@ -40,17 +40,4 @@ class AppCubit extends Cubit<AppStates> {
     _isBottomSheetOpened = !_isBottomSheetOpened;
     emit(AppChangeBottomSheetState());
   }
-
-  //****************************************************//
-  // handling fetching data
-
-  var _isFetchingData = false;
-  bool get isFetchingData {
-    return _isFetchingData;
-  }
-
-  void setFetchingDataState(bool state) {
-    _isFetchingData = state;
-    emit(AppChangeDataFetchingState());
-  }
 }
