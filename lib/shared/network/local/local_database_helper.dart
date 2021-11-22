@@ -4,7 +4,7 @@ import 'package:path/path.dart' as path_constructor;
 abstract class LocalDBHelper {
   static Future<sql.Database> createDatabase() async {
     final dbPath = await sql.getDatabasesPath();
-    // sql.deleteDatabase(path_constructor.join(dbPath, 'todo.db'));
+    //sql.deleteDatabase(path_constructor.join(dbPath, 'todo.db'));
     final sqlDatabase = await sql.openDatabase(path_constructor.join(dbPath, 'todo.db'), version: 1,
         onCreate: (database, currentVersion) async {
       try {

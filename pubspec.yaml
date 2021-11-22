@@ -37,6 +37,8 @@ dependencies:
   sqflite: ^2.0.0+4
   path: ^1.8.0
   intl: ^0.17.0
+  flutter_bloc: ^8.0.0
+  bloc: ^8.0.1
 
 
 dev_dependencies:
