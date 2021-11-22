@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/models/task/cubit/task_states.dart';
 import 'package:todo_app/models/task/task.dart';
 import 'package:todo_app/shared/network/local/local_database_helper.dart';
@@ -21,6 +22,7 @@ class TasksCubit extends Cubit<TasksStates> {
     return [..._tasks];
   }
 
+  static TasksCubit get(context) => BlocProvider.of(context);
   void addNewTask({required String title, required String time, required String date}) {
     final taskId = DateTime.now().toString();
     _tasks.add(Task(id: taskId, time: time, date: date, title: title, status: 'new'));
