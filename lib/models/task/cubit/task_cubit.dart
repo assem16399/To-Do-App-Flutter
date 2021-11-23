@@ -7,19 +7,18 @@ import 'package:todo_app/shared/network/local/local_database_helper.dart';
 class TasksCubit extends Cubit<TasksStates> {
   TasksCubit() : super(TasksInitialState());
 
-  List<Task> _tasks = [
-    // Task(id: 1, title: 'Go To Gym', type: 'new', date: '22 Nov 2021', time: '9.00 AM'),
-    // Task(id: 2, title: 'Go To University', type: 'new', date: '22 Nov 2021', time: '12.00 PM'),
-    // Task(
-    //     id: 3,
-    //     title: 'Go To Work Space To Study',
-    //     type: 'new',
-    //     date: '22 Nov 2021',
-    //     time: '5.00 PM'),
-  ];
+  List<Task> _tasks = [];
 
-  List<Task> get tasks {
-    return [..._tasks];
+  List<Task> get newTasks {
+    return _tasks.where((task) => task.status == 'new').toList();
+  }
+
+  List<Task> get doneTasks {
+    return _tasks.where((task) => task.status == 'done').toList();
+  }
+
+  List<Task> get archivedTasks {
+    return _tasks.where((task) => task.status == 'archived').toList();
   }
 
   static TasksCubit get(context) => BlocProvider.of(context);
@@ -43,5 +42,17 @@ class TasksCubit extends Cubit<TasksStates> {
             ))
         .toList();
     emit(TasksFetchState());
+  }
+
+  void updateTaskState(String id, String newStatus) {
+    final updatedTaskIndex = _tasks.indexWhere((task) => task.id == id);
+    _tasks[updatedTaskIndex] = Task(
+        id: id,
+        time: _tasks[updatedTaskIndex].time,
+        date: _tasks[updatedTaskIndex].date,
+        title: _tasks[updatedTaskIndex].title,
+        status: newStatus);
+    emit(TasksUpdateTaskState());
+    LocalDBHelper.updateData(id, newStatus);
   }
 }

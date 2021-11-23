@@ -42,4 +42,14 @@ abstract class LocalDBHelper {
       rethrow;
     }
   }
+
+  static void updateData(String id, String newStatus) async {
+    try {
+      final database = await createDatabase();
+      await database.rawUpdate('UPDATE user_tasks SET status = ? WHERE id = ?', [newStatus, id]);
+    } catch (error) {
+      print(error.toString());
+      rethrow;
+    }
+  }
 }

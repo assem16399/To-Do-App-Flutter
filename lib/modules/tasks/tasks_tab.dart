@@ -15,7 +15,7 @@ class TasksTab extends StatelessWidget {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : tasksData.tasks.isEmpty
+          : tasksData.newTasks.isEmpty
               ? const Center(
                   child: Text(
                     'Start Adding Some New Tasks!',
@@ -24,22 +24,27 @@ class TasksTab extends StatelessWidget {
                   ),
                 )
               : ListView.builder(
-                  itemCount: tasksData.tasks.length,
+                  itemCount: tasksData.newTasks.length,
                   itemBuilder: (context, index) => Card(
                     child: ListTile(
                       leading: CircleAvatar(
                         radius: 32,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: FittedBox(child: Text(tasksData.tasks[index].time!)),
+                          child: FittedBox(child: Text(tasksData.newTasks[index].time!)),
                         ),
                       ),
-                      title: Text(tasksData.tasks[index].title!),
+                      title: Text(tasksData.newTasks[index].title!),
                       subtitle: Row(
                         children: [
-                          Text(tasksData.tasks[index].date!),
+                          Text(tasksData.newTasks[index].date!),
                         ],
                       ),
+                      trailing: IconButton(
+                          onPressed: () {
+                            tasksData.updateTaskState(tasksData.newTasks[index].id!, 'done');
+                          },
+                          icon: const Icon(Icons.done)),
                     ),
                   ),
                 ),
