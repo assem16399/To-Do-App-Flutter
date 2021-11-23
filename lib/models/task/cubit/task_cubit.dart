@@ -22,6 +22,7 @@ class TasksCubit extends Cubit<TasksStates> {
   }
 
   static TasksCubit get(context) => BlocProvider.of(context);
+
   void addNewTask({required String title, required String time, required String date}) {
     final taskId = DateTime.now().toString();
     _tasks.add(Task(id: taskId, time: time, date: date, title: title, status: 'new'));
@@ -54,5 +55,11 @@ class TasksCubit extends Cubit<TasksStates> {
         status: newStatus);
     emit(TasksUpdateTaskState());
     LocalDBHelper.updateData(id, newStatus);
+  }
+
+  void deleteTask(String id) {
+    _tasks.removeWhere((task) => task.id == id);
+    emit(TasksDeleteTaskState());
+    LocalDBHelper.deleteRecord(id);
   }
 }

@@ -17,12 +17,11 @@ abstract class LocalDBHelper {
     return sqlDatabase;
   }
 
-  static Future<void> insertInDatabase({
-    required String taskId,
-    required String taskTitle,
-    required String taskTime,
-    required String taskDate,
-  }) async {
+  static Future<void> insertInDatabase(
+      {required String taskId,
+      required String taskTitle,
+      required String taskTime,
+      required String taskDate}) async {
     final database = await createDatabase();
     try {
       await database.transaction((txn) async {
@@ -48,7 +47,15 @@ abstract class LocalDBHelper {
       final database = await createDatabase();
       await database.rawUpdate('UPDATE user_tasks SET status = ? WHERE id = ?', [newStatus, id]);
     } catch (error) {
-      print(error.toString());
+      rethrow;
+    }
+  }
+
+  static void deleteRecord(String id) async {
+    try {
+      final database = await createDatabase();
+      await database.rawDelete('DELETE FROM user_tasks WHERE id = ?', [id]);
+    } catch (error) {
       rethrow;
     }
   }

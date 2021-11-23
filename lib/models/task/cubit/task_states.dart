@@ -7,3 +7,5 @@ class TasksAddNewTaskState extends TasksStates {}
 class TasksFetchState extends TasksStates {}
 
 class TasksUpdateTaskState extends TasksStates {}
+
+class TasksDeleteTaskState extends TasksStates {}

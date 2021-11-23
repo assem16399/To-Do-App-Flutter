@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/models/task/cubit/task_cubit.dart';
 import 'package:todo_app/models/task/cubit/task_states.dart';
+import 'package:todo_app/shared/components/widgets/tasks_list_item.dart';
 
 class ArchivedTab extends StatefulWidget {
   const ArchivedTab({Key? key}) : super(key: key);
@@ -30,22 +31,12 @@ class _ArchivedTabState extends State<ArchivedTab> {
                 )
               : ListView.builder(
                   itemCount: tasksData.archivedTasks.length,
-                  itemBuilder: (context, index) => Card(
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 32,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FittedBox(child: Text(tasksData.archivedTasks[index].time!)),
-                        ),
-                      ),
-                      title: Text(tasksData.archivedTasks[index].title!),
-                      subtitle: Row(
-                        children: [
-                          Text(tasksData.archivedTasks[index].date!),
-                        ],
-                      ),
-                    ),
+                  itemBuilder: (context, index) => TasksListItem(
+                    taskTitle: tasksData.archivedTasks[index].title!,
+                    taskDate: tasksData.archivedTasks[index].date!,
+                    taskId: tasksData.archivedTasks[index].id!,
+                    taskStatus: tasksData.archivedTasks[index].status!,
+                    taskTime: tasksData.archivedTasks[index].time!,
                   ),
                 ),
     );

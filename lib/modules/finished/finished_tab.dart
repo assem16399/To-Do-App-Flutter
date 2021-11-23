@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/models/task/cubit/task_cubit.dart';
 import 'package:todo_app/models/task/cubit/task_states.dart';
+import 'package:todo_app/shared/components/widgets/tasks_list_item.dart';
 
 class FinishedTab extends StatefulWidget {
   const FinishedTab({Key? key}) : super(key: key);
@@ -30,27 +31,13 @@ class _FinishedTabState extends State<FinishedTab> {
                 )
               : ListView.builder(
                   itemCount: tasksData.doneTasks.length,
-                  itemBuilder: (context, index) => Card(
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 32,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FittedBox(child: Text(tasksData.doneTasks[index].time!)),
-                        ),
-                      ),
-                      title: Text(tasksData.doneTasks[index].title!),
-                      subtitle: Row(
-                        children: [
-                          Text(tasksData.doneTasks[index].date!),
-                        ],
-                      ),
-                      trailing: IconButton(
-                          onPressed: () {
-                            tasksData.updateTaskState(tasksData.doneTasks[index].id!, 'archived');
-                          },
-                          icon: const Icon(Icons.archive)),
-                    ),
+                  itemBuilder: (context, index) => TasksListItem(
+                    taskTitle: tasksData.doneTasks[index].title!,
+                    taskDate: tasksData.doneTasks[index].date!,
+                    taskId: tasksData.doneTasks[index].id!,
+                    taskStatus: tasksData.doneTasks[index].status!,
+                    taskTime: tasksData.doneTasks[index].time!,
+                    iconData: Icons.archive,
                   ),
                 ),
     );
